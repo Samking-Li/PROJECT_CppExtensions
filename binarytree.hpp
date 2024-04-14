@@ -63,12 +63,21 @@ public:
 		while (Q.size() != 0)
 		{
 			p = Q.front();
-			if (i < n)
+			if (i < n-1)
 			{
 				insert(list[i++], p, false);
-				insert(list[i++], p, true);
-				Q.push(p->left_child);
-				Q.push(p->right_child);
+				if (i < n - 1)
+				{
+					insert(list[i++], p, true);
+				}
+				if (p->LChild != NULL)
+				{
+					Q.push(p->LChild);
+				}
+				if (p->RChild != NULL)
+				{
+					Q.push(p->RChild);
+				}
 			}
 			Q.pop();
 		}
@@ -79,17 +88,17 @@ public:
 		return this->root;
 	}
 	//遍历操作，参数控制遍历顺序
-	void order(std::string FLAG = 'preorder')
+	void order(string FLAG = 'pre')
 	{
-		if (FLAG == 'preorder')
+		if (FLAG == 'pre')
 		{
 			preorder(this->root);
 		}
-		else if (FLAG == 'midorder') 
+		else if (FLAG == 'mid') 
 		{
 			midorder(this->root);
 		}
-		else if (FLAG == 'postorder')
+		else if (FLAG == 'post')
 		{
 			postorder(this->root);
 		}
