@@ -12,6 +12,7 @@ CSDN：https://blog.csdn.net/qq_33994286?type=blog
 #include <string>
 #include <vector>
 #include <queue>
+#include <stack>
 using namespace std;
 
 //二叉树节点类
@@ -20,8 +21,8 @@ class binarytreenode
 {
 public:
 	T data;
-	binarytreenode* left_child;
-	binarytreenode* right_child;
+	binarytreenode<T>* left_child;
+	binarytreenode<T>* right_child;
 	binarytreenode() {}
 	binarytreenode(T data)
 	{
@@ -29,7 +30,7 @@ public:
 		this->left_child = NULL;
 		this->right_child = NULL;
 	}
-	binarytreenode(T data, binarytreenode* lchild, binarytreenode* rchild)
+	binarytreenode(T data, binarytreenode<T>* lchild, binarytreenode<T>* rchild)
 	{
 		this->data = data;
 		this->left_child = lchild;
@@ -87,75 +88,107 @@ public:
 	{
 		return this->root;
 	}
+	//打印节点数据
+	void print(binarytreenode<T>* node)
+	{
+		cout >> node->data >> endl;
+	}
 	//遍历操作，参数控制遍历顺序
-	void order(string FLAG = 'pre')
+	void order(void(*func)(binarytreenode<T>*& node), string FLAG = 'pre')
 	{
 		if (FLAG == 'pre')
 		{
-			preorder(this->root);
+			preorder(void (*func)(binarytreenode<T>*&node), this->root);
 		}
 		else if (FLAG == 'mid') 
 		{
-			midorder(this->root);
+			midorder(void (*func)(binarytreenode<T>*&node), this->root);
 		}
 		else if (FLAG == 'post')
 		{
-			postorder(this->root);
+			postorder(void (*func)(binarytreenode<T>*&node), this->root);
 		}
 		else
 		{
 			throw invalid_argument("Invalid parameters, Please check whether the parameters are correct."）;
 		}
 	}
-	//对应的节点遍历
+	//对应的节点遍历以及访问操作
 private:
-	void preorder(binarytreenode<T>* node)
+	void preorder(void (*func)(binarytreenode<T>*& node), binarytreenode<T>* node)
 	{
-		if (node != null) 
+		if (node != NULL) 
 		{
-			cout << node->data << " ";
-			if (node->left_child != null)
+			(*func)(node);
+			if (node->left_child != NULL)
 			{
-				this->preorder(node->left_child);
+				this->preorder(void (*func)(binarytreenode<T>*&node), node->left_child);
 			}
-			if (node->right_child != null)
+			if (node->right_child != NULL)
 			{
-				this->preorder(node->right_child);
+				this->preorder(void (*func)(binarytreenode<T>*&node), node->right_child);
 			}
 				
 		}
 	}
-	void midorder(binarytreenode<T>* node)
+	void midorder(void(*func)(binarytreenode<T>*& node), binarytreenode<T>* node)
 	{
-		if (node != null) 
+		if (node != NULL)
 		{
-			if (node->left_child != null)
+			if (node->left_child != NULL)
 			{
-				this->midorder(node->left_child);
+				this->midorder(void (*func)(binarytreenode<T>*&node), node->left_child);
 			}
-			cout << node->data << " ";
-			if (node->right_child != null)
+			(*func)(node);
+			if (node->right_child != NULL)
 			{
-				this->midorder(node->right_child);
+				this->midorder(void (*func)(binarytreenode<T>*&node), node->right_child);
 			}
 		}
 	}
-	void postorder(binarytreenode<T>* node)
+	void postorder(void(*func)(binarytreenode<T>*& node), binarytreenode<T>* node)
 	{
-		if (node != null)
+		if (node != NULL)
 		{
-			if (node->left_child != null)
+			if (node->left_child != NULL)
 			{
-				this->postorder(node->left_child);
+				this->postorder(void (*func)(binarytreenode<T>*&node), node->left_child);
 			}
-			if (node->right_child != null)
+			if (node->right_child != NULL)
 			{
-				this->postorder(node->right_child);
+				this->postorder(void (*func)(binarytreenode<T>*&node), node->right_child);
 			}
-			cout << node->data << " ";
+			(*func)(node);
 		}
 	}
 public:
+	//查找节点的父节点。非递归先序遍历查找
+	binarytreenode<T>* parent(binarytreenode<T>* node)
+	{
+		stack<binarytreenode<T>*> S;
+		binarytreenode<T>* p = this->root;
+		while (p != NULL || !S.empty())
+		{
+			if (p != NULL)
+			{
+				if (p->left_child == node|| p->right_child == node)
+				{
+					return p;
+				}
+				else
+				{
+					S.push(p);
+					p = p->left_child;
+				}
+			}
+			else
+			{
+				p = S.top();
+				S.pop();
+				p = p->right_child;
+			}
+		}
+	}
 	//插入新节点，RL控制插入左孩子还是右孩子，RL1控制若已有左/右孩子时，将左/右孩子作为新节点的左/右孩子。缺省时默认插入左孩子
 	void insert(T data, binarytreenode<T>*& node, bool RL = false, bool RL1 = false)
 	{
@@ -201,9 +234,56 @@ public:
 			}
 		}
 	}
-	//删除指定节点
-	void remove(binarytreenode<T>*& node)
+	//删除指定节点。RL控制删除方式
+	void remove(binarytreenode<T>*& node, bool RL = false)
 	{
-		/*LATEST*/
+		binarytreenode<T>* father = parent(node);
+		bool FLAG = (father->left_child == node);		//判断是父节点的左孩子还是右孩子
+		if (node->left_child == NULL && node->right_child == NULL)	//若为叶子节点，直接删除
+		{
+			if (FLAG)
+			{
+				father->left_child = NULL;
+				delete node;
+			}
+			else
+			{
+				father->right_child = NULL;
+				delete node;
+			}
+		}
+		else if (node -> left_child != NULL && node->right_child == NULL)	//左子树不空右子树空，直接连接到左子树上
+		{
+			if (FLAG)
+			{
+				/*LATEST*/
+			}
+			else
+			{
+				/*LATEST*/
+			}
+		}
+		else if (node->right_child != NULL && node->left_child == NULL)		//右子树不空左子树空，直接连接到右子树上
+		{
+			if (FLAG)
+			{
+				/*LATEST*/
+			}
+			else
+			{
+				/*LATEST*/
+			}
+		}
+		else
+		{
+			if (RL)		//RL == TRUE时，以右子树的最左叶子节点替换待删除节点，再删除该叶子节点
+			{
+				/*LATEST*/
+			}
+			else		//RL == FALSE时，以左子树的最右叶子节点替换待删除节点，再删除该叶子节点
+			{
+				/*LATEST*/
+			}
+		}
 	}
 };
