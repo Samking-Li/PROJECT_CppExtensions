@@ -3,7 +3,7 @@
 本人能力有限，难免存在BUG与不完善、可优化的地方，欢迎各位大佬使用与更正！
 作者：SamKinGLiiiEeE
 个人仓库：https://github.com/Samking-Li
-CSDN：https://blog.csdn.net/qq_33994286?spm=1011.2124.3001.5343
+CSDN：https://blog.csdn.net/qq_33994286?type=blog
 */
 
 #pragma once
@@ -107,6 +107,8 @@ public:
 			throw invalid_argument("Invalid parameters, Please check whether the parameters are correct."）;
 		}
 	}
+	//对应的节点遍历
+private:
 	void preorder(binarytreenode<T>* node)
 	{
 		if (node != null) 
@@ -153,6 +155,7 @@ public:
 			cout << node->data << " ";
 		}
 	}
+public:
 	//插入新节点，RL控制插入左孩子还是右孩子，RL1控制若已有左/右孩子时，将左/右孩子作为新节点的左/右孩子。缺省时默认插入左孩子
 	void insert(T data, binarytreenode<T>*& node, bool RL = false, bool RL1 = false)
 	{
@@ -198,9 +201,9 @@ public:
 			}
 		}
 	}
-	//删除指定节点（待完善）
+	//删除指定节点
 	void remove(binarytreenode<T>*& node)
 	{
-		/*待完善*/
+		/*LATEST*/
 	}
 };

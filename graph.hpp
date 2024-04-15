@@ -4,7 +4,7 @@
 本人能力有限，难免存在BUG与不完善、可优化的地方，欢迎各位大佬使用与更正！
 作者：SamKinGLiiiEeE
 个人仓库：https://github.com/Samking-Li
-CSDN：https://blog.csdn.net/qq_33994286?spm=1011.2124.3001.5343
+CSDN：https://blog.csdn.net/qq_33994286?type=blog
 */
 
 #pragma once
@@ -17,7 +17,6 @@ CSDN：https://blog.csdn.net/qq_33994286?spm=1011.2124.3001.5343
 using namespace std;
 
 /*邻接表*/
-
 //边表节点类
 template <class T>
 class arcnode
@@ -36,14 +35,13 @@ public:
 		this->weigh = weigh;
 	}
 };
-
-//节点表节点
+//节点表节点类
 template<class T,class T1>
 class node
 {
 public:
 	T data;	//节点数据
-	list<arcnode<T1>> arclist; //边表
+	list<arcnode<T1>*> arclist; //边表
 	node() {}
 	node(T data)
 	{
@@ -61,16 +59,15 @@ public:
 	}
 	int arcsize()
 	{
-		return (arclist.size());
+		return (this->arclist.size());
 	}
 };
-
 //邻接表类
 template<class T, class T1>
 class adjgraph
 {
-	vector<node<T, T1>*> nodelist; //节点表
 public:
+	list<node<T, T1>*> nodelist; //节点表
 	adjgraph()
 	{
 		this->nodelist.push_back(new node<T, T1>());
@@ -107,25 +104,43 @@ public:
 		else if(FLAG == "arc")	//边数
 		{
 			int count = 0;
-			int i;
-			int len = this->nodelist.size();
-			for (i = 0; i < len; i++)
+			for (auto i = this->nodelist.begin(); i != this->nodelist.end(); ++i)
 			{
-				count+=this->
+				count += i->arcsize();
 			}
 			return count;
 		}
 	}
 	void insert_node(T data)	//插入节点
 	{
-		this->nodelist.push_back(new node<T, T1>(data, nex));
+		this->nodelist.push_back(new node<T, T1>(data));
 	}
-	void erase_node(int locate)		//删除节点
+	void erase_node(node<T, T1>* node)		//删除节点
 	{
-		
+		for (auto i = this->nodelist.begin(); i != this->nodelist.end(); ++i)
+		{
+			if (i == node)
+			{
+				/*LATEST*/
+			}
+		}
 	}
-	void insert_arc(int start, int end)	//插入边
+	void insert_arc(node<T, T1>* start, node<T, T1>* end)	//插入边
 	{
-		node<T, T1>* p = this->nodelist.begin();
+		for (auto i = this->nodelist.begin(); i != this->nodelist.end(); ++i)
+		{
+			if (i == start)
+			{
+				/*LATEST*/
+			}
+		}
 	}
 };
+
+
+/*邻接矩阵*/
+template <class T>
+class adjarray
+{
+	/*LATEST*/
+}
