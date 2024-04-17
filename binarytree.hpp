@@ -51,6 +51,8 @@ public:
 	binarytree(T data)
 	{
 		this->root = new binarytreenode<T>(data);
+		this->root->left_child = NULL;
+		this->root->right_child = NULL;
 	}
 	//根据vector列表逐层生成树
 	binarytree(vector<T> list)
@@ -71,13 +73,13 @@ public:
 				{
 					insert(list[i++], p, true);
 				}
-				if (p->LChild != NULL)
+				if (p->left_child != NULL)
 				{
-					Q.push(p->LChild);
+					Q.push(p->left_child);
 				}
-				if (p->RChild != NULL)
+				if (p->right_child != NULL)
 				{
-					Q.push(p->RChild);
+					Q.push(p->right_child);
 				}
 			}
 			Q.pop();
