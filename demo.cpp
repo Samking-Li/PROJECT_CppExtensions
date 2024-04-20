@@ -1,5 +1,6 @@
 #include <vector>
 #include "binarytree.hpp"
+#include "slidwindow.hpp"
 using namespace std;
 
 void bitree_demo()
@@ -34,8 +35,34 @@ void PID_demo()
 
 }
 
+void slidwin_demo()
+{
+	vector<int> arr;
+	int i;
+	int n;
+	int item;
+	cin >> n;
+	for (i = 0; i < n; i++)
+	{
+		cin >> item;
+		arr.push_back(item);
+	}
+	slidewindow<int> window = slidewindow<int>(arr);
+	for (i = 0; i < n; i++)
+	{
+		window.add();
+	}
+	function<void(int)> fun = (
+		[&](int item)
+		{
+			cout << item << endl;
+		}
+	);
+	window.order(fun);
+}
+
 void main()
 {
-	bitree_demo();
+	slidwin_demo();
 }
 

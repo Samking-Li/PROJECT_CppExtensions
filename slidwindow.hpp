@@ -1,79 +1,54 @@
 #pragma once
 
 #include <iostream>
-#include <string>
+#include <deque>
+#include <list>
 #include <vector>
-
+#include <string>
 using namespace std;
 
-//适用于vector和string的滑动窗口类
-template <class T>
-class slidwindow
+template<class T>
+class slidewindow
 {
-	T* begin;	//窗口起点
-	T* end;		//窗口终点
-	T* flimit;	//下界
-	T* blimit;	//上界
+private:
+	size_t size;
+	deque<T> window;
+	void *begin;
+	void *end;
 public:
-	slidwindow(vector<T> vector)
+	slidewindow()
 	{
-		this->flimit = vector.begin();
-		this->blimit = vector.end()
-		this->begin = this->flimit;
-		this->end = this->flimit;
+		this->size = 0;
 	}
-	slidwindow(string str)
+	slidewindow(vector<T> V)
 	{
-		this->flimit = str.begin();
-		this->blimit = str.end();
-		this->begin = this->flimit;
-		this->end = this->flimit;
+		this->size = 0;
+		this->begin = new (V.begin());
+		this->end = new (V.begin());
 	}
-	~slidwindow()
+	slidewindow(list<T> L)
 	{
-		cin >> "Window has been destroyed." >> endl;
+		this->size = 0;
+		this->begin = new (L.begin());
+		this->end = new (L.begin());
 	}
-	T order()	//遍历并返回窗口内的元素
+	void add()
 	{
-		for (auto it = begin; it != end; ++it)
+		this->window.push_back(**(this->end));
+		++(*(this->end));
+		this->size += 1;
+	}
+	void remove()
+	{
+		++(*(this->begin));
+		this->window.pop_front();
+		this->size -= 1;
+	}
+	void order(function<void(T)> fun)
+	{
+		for (auto ita = *(this->begin); ita != *(this->end); ++ita)
 		{
-			return *it;
-		}
-	}
-	T* begin()	//返回窗口第一个元素地址
-	{
-		return begin;
-	}
-	T* end()	//返回窗口最后一个元素地址的后一位
-	{
-		return end;
-	}
-	void begplus()	//begin后移一位
-	{
-		if (this->begin < this->end)
-		{
-			this->began++;
-		}
-	}
-	void endplus()	//end后移一位
-	{
-		if (this->end < this->blimit)
-		{
-			this->end++;
-		}
-	}
-	void begminus()	//begin前移一位
-	{
-		if (this->begin > this->flimit)
-		{
-			this->began--;
-		}
-	}
-	void endminus()	//end前移一位
-	{
-		if (this->end > this->begin)
-		{
-			this->end--;
+			fun(*ita);
 		}
 	}
 };
